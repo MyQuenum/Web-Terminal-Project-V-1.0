@@ -3,7 +3,11 @@
     <h1>Web terminal by MyQUENUM</h1>
         <div class="canva2">
             <div class="terminal">
-              <input type="text" @keydown.enter="showHide" @keydown.backspace="dontDelete" @keydown.up="showOldCmd()" @keydown.down="showNextCmd()" v-model="fullCommand"><br><br>
+                <div class="prompt">
+                    <span id="prefix">myquenum@MyQ-localhost <span id="colon">:</span><span id="tilde">~</span> <span id="dollar">$</span></span> 
+                    <input type="text" @keydown.enter="showHide" @keydown.backspace="dontDelete" @keydown.up="showOldCmd()" @keydown.down="showNextCmd()" v-model="fullCommand">
+                </div>
+                <p id="message">{{message}}</p>
             </div>
             <div class="monitor">
                 <div class="screen">
@@ -15,11 +19,13 @@
 </template>
 
 <script>
+
 export default {
   name: 'HelloWorld',
   data() {
         return {
-            fullCommand: "myquenum@MyQ-localhost:~$ ",
+            fullCommand: "",
+            message: "",
             boxIsVisible: false,
             index:null,
             commandStore: []
@@ -27,45 +33,45 @@ export default {
     },
     methods: {
         showHide(){
-            if(this.fullCommand == "myquenum@MyQ-localhost:~$ sudo show my box" && this.boxIsVisible == false){
+            if(this.fullCommand == "sudo show my box" && this.boxIsVisible == false){
                 this.boxIsVisible = true;
+                this.message = "Box set as visible";
             }
-            else if(this.fullCommand == "myquenum@MyQ-localhost:~$ sudo hide my box" && this.boxIsVisible == true){
+            else if(this.fullCommand == "sudo hide my box" && this.boxIsVisible == true){
                 this.boxIsVisible = false;
-            }else if(this.fullCommand == "myquenum@MyQ-localhost:~$ sudo showHide my box"){
+                this.message = "Box hidden";
+            }else if(this.fullCommand == "sudo showHide my box"){
+                if(!this.boxIsVisible)
+                this.message = "Box set as visible";
+                else
+                this.message = "Box hidden";
                 this.boxIsVisible = !this.boxIsVisible;
             }
             this.upIndex = 0;
             this.commandStore.push(this.fullCommand);
-            this.fullCommand="myquenum@MyQ-localhost:~$ ";
+            this.fullCommand="";
             this.index = null;
-        },
-        dontDelete(){
-            if(this.fullCommand == "myquenum@MyQ-localhost:~$ ")
-            {
-                this.fullCommand = "myquenum@MyQ-localhost:~$  ";
-            }
         },
         showOldCmd(){
             if (this.index == null) {
                 this.index = this.commandStore.length;
-            }
+            } 
             if(this.commandStore != [] && this.index >= 1){ 
                 this.index--;
                 this.fullCommand = this.commandStore[this.index];
-            }else{
-                this.fullCommand = "myquenum@MyQ-localhost:~$ ";
             }
         },
         showNextCmd(){
             if (this.index == null) {
-              this.fullCommand = "myquenum@MyQ-localhost:~$ ";
+              this.fullCommand = "";
             }else{
               if (this.commandStore != [] && this.index < this.commandStore.length - 1) {
                 this.index++;
                 this.fullCommand = this.commandStore[this.index];
               }else{
-                this.fullCommand = "myquenum@MyQ-localhost:~$ ";
+                if(this.index == this.commandStore.length -1)
+                  this.index++;
+                this.fullCommand = "";
               } 
             }
         }
@@ -118,17 +124,50 @@ export default {
       border: 1px solid yellow;
   }
 
+  .prompt{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  #prefix{
+    margin-left: 10px;
+    color: rgb(98, 194, 9);
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 15px;
+  }
+
+  #colon{
+    color: white;
+  }
+
+  #tilde{
+    color: rgb(57, 57, 255);
+  }
+
+  #dollar{
+    color: white;
+  }
   input{
       background-color: #350a35;
-      width: 100%;
-      height: 50px;
-      color: rgb(207, 207, 77);
+      height: 40px;
+      color: white;
       font-weight: bold;
+      font-size: 15px;
       border: none;
   }
 
   input:focus{
       outline: none;
+  }
+
+  #message{
+    margin-left: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    font-family: Arial; 
   }
 
 
