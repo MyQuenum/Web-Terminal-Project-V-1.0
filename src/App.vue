@@ -5,7 +5,7 @@
             <div class="terminal">
                 <div class="prompt">
                     <span id="prefix">myquenum@MyQ-localhost <span id="colon">:</span><span id="tilde">~</span> <span id="dollar">$</span></span> 
-                    <input type="text" @keydown.enter="showHide" @keydown.backspace="dontDelete" @keydown.up="showOldCmd()" @keydown.down="showNextCmd()" v-model="fullCommand">
+                    <input id="typing-zone" type="text" @keydown.enter="showHide" @keydown.backspace="dontDelete" @keydown.up="showOldCmd()" @keydown.down="showNextCmd()" v-model="fullCommand" autofocus>
                 </div>
                 <p id="message">{{message}}</p>
             </div>
@@ -60,6 +60,7 @@ export default {
                 this.index--;
                 this.fullCommand = this.commandStore[this.index];
             }
+            
         },
         showNextCmd(){
             if (this.index == null) {
